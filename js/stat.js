@@ -12,7 +12,7 @@ var renderStatistics = function(ctx, names, times) {
       y: 10,
       width: 420,
       height: 270,
-      title: `Ура вы победили!\nСписок результатов:`,
+      title: 'Ура вы победили!\nСписок результатов:',
       fontSize: 16
     },
     shadow: {

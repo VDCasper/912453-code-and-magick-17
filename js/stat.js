@@ -7,13 +7,12 @@ var renderStatistics = function (ctx, names, times) {
     defaultFontSize: 16,
     defaultColor: 'black',
     defaultBgColor: 'white',
-    window: {
-      x: 100,
-      y: 10,
+    modalWindow: {
+      coordX: 100,
+      coordY: 10,
       width: 420,
       height: 270,
-      title: 'Ура вы победили!\nСписок результатов:',
-      fontSize: 16
+      title: 'Ура вы победили!\nСписок результатов:'
     },
     shadow: {
       shift: 10,
@@ -28,6 +27,17 @@ var renderStatistics = function (ctx, names, times) {
         return 'hsl(240,' + Math.random() * 100 + '%, 50%)';
       }
     }
+  };
+
+  // Определяет максимальный элемент-число массива
+  var maxNumberArrayElement = function (numArray) {
+    var maxElement = numArray[0];
+    for (var i = 0; i < numArray.length; i++) {
+      if (numArray[i] > maxElement) {
+        maxElement = numArray[i];
+      }
+    }
+    return maxElement;
   };
 
   // Вывод модального окна с тенью
@@ -61,38 +71,23 @@ var renderStatistics = function (ctx, names, times) {
 
   // Рисует гистограмму в заданном месте
   var drawHistogram = function (context, x, y, namesArray, timesArray) {
-    // Сначала определяе максимальное время
-    var maxTime = function (numArray) {
-      var maxElement = 0;
-      for (var i = 0; i < numArray.length; i++) {
-        if (numArray[i] > maxElement) {
-          maxElement = numArray[i];
-        }
-      }
-      return maxElement;
-    };
-
     // Находим коэффициент пропорциональности для высоты гистограммы с учетом надписей у каждой колонки
-    var mapRatio = maxTime(timesArray) / (sets.hist.height - sets.defaultFontSize * 2);
-
-    // Возвращает высоту колонки
-    var timeMap = function (time) {
-      return Math.floor(time / mapRatio);
-    };
+    var ratio = maxNumberArrayElement(timesArray) / (sets.hist.height - sets.defaultFontSize * 2);
 
     // Выводит колонку с надписями, для имени "Вы" назначает специальный цвет
     var drawBar = function (count, name, time) {
+      var barHeight = Math.floor(time / ratio); // высота колонки в пропорции
       var barX = x + count * (sets.hist.columnWidth + sets.hist.columnsGap); // начальная координата X
-      var barY = y + sets.hist.height - sets.defaultFontSize * 2 - timeMap(time); // yачальная координата Y
+      var barY = y + sets.hist.height - sets.defaultFontSize * 2 - barHeight; // yачальная координата Y
 
       printText(context, Math.floor(time), barX, barY, sets.defaultFontSize);
       context.fillStyle = name === 'Вы' ? sets.hist.currentColor : sets.hist.getOtherColor();
-      context.fillRect(barX, barY + sets.defaultFontSize, sets.hist.columnWidth, timeMap(time));
+      context.fillRect(barX, barY + sets.defaultFontSize, sets.hist.columnWidth, barHeight);
       printText(
           context,
           name,
           barX,
-          barY + sets.defaultFontSize * 2 + timeMap(time),
+          barY + sets.defaultFontSize * 2 + barHeight,
           sets.defaultFontSize
       );
     };
@@ -104,9 +99,9 @@ var renderStatistics = function (ctx, names, times) {
   };
 
   // Поочередно выводим модальное окно, печатаем заголовок и рисуем гистограмму
-  drawModalWindow(ctx, sets.window.x, sets.window.y, sets.window.width, sets.window.height);
-  printText(ctx, sets.window.title, sets.window.x + 20, sets.window.y + 30, sets.defaultFontSize);
-  drawHistogram(ctx, sets.window.x + 40, sets.window.y + sets.defaultFontSize + 70, names, times);
+  drawModalWindow(ctx, sets.modalWindow.coordX, sets.modalWindow.coordY, sets.modalWindow.width, sets.modalWindow.height);
+  printText(ctx, sets.modalWindow.title, sets.modalWindow.coordX + 20, sets.modalWindow.coordY + 30, sets.defaultFontSize);
+  drawHistogram(ctx, sets.modalWindow.coordX + 40, sets.modalWindow.coordY + sets.defaultFontSize + 70, names, times);
 };
 
 // /EOF

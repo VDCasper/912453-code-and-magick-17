@@ -3,6 +3,9 @@
 var WISARDS_MAX = 4;
 var setupWindow = document.querySelector('.setup');
 var setupSimilar = document.querySelector('.setup-similar');
+var similarWizardTemplate = document
+.querySelector('#similar-wizard-template')
+.content.querySelector('.setup-similar-item');
 
 // Инициализируем набор возможных свойств персонажей
 var names = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
@@ -49,11 +52,7 @@ function generateRandomWizards() {
 
 // Создает DOM-элемент из объекта
 function getWizardItem(wizard) {
-  var wizardElement = document
-    .querySelector('#similar-wizard-template')
-    .content.querySelector('.setup-similar-item')
-    .cloneNode(true);
-
+  var wizardElement = similarWizardTemplate.cloneNode(true);
   wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
   wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
   wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;

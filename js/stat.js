@@ -104,4 +104,6 @@ var renderStatistics = function (ctx, names, times) {
   drawHistogram(ctx, sets.modalWindow.coordX + 40, sets.modalWindow.coordY + sets.defaultFontSize + 70, names, times);
 };
 
+window.renderStatistics = renderStatistics;
+
 // /EOF

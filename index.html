@@ -77,7 +77,7 @@
       <div class="demo"></div>
 
       <div class="setup-open">
-        <img src="./img/user-1.jpg" class="setup-open-icon" />
+        <img src="./img/user-1.jpg" class="setup-open-icon" tabindex="0" />
       </div>
     </header>
 
@@ -87,6 +87,8 @@
         method="post"
         enctype="multipart/form-data"
         autocomplete="off"
+        method="POST"
+        action="https://js.dump.academy/code-and-magick"
       >
         <div class="setup-title">
           <div class="setup-user">
@@ -175,7 +177,7 @@
             <div class="setup-similar-list"><!--Список похожих персонажей--></div>
           </div>
 
-          <button class="button setup-submit">Сохранить</button>
+          <button class="button setup-submit" type="submit">Сохранить</button>
         </div>
       </form>
     </div>

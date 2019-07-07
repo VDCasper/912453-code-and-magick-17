@@ -1,5 +1,7 @@
 'use strict';
 
+var ENTER_KEY = 13;
+var ESC_KEY = 27;
 var WISARDS_MAX = 4;
 var setupWindow = document.querySelector('.setup');
 var setupSimilar = document.querySelector('.setup-similar');
@@ -11,7 +13,6 @@ var setupOpenButton = document.querySelector('.setup-open');
 var setupOpenIcon = document.querySelector('.setup-open-icon');
 var setupCloseButton = document.querySelector('.setup-close');
 var setupWizardForm = document.querySelector('.setup-wizard-form');
-var setupSubmitButton = document.querySelector('.setup-submit');
 
 // Изображение персонажа в окне настроек
 var wizardSetup = {
@@ -115,26 +116,32 @@ function onSetupWindowClose(evt) {
   closeSetup();
 }
 
+function onSetupEscPress(evt) {
+  if (
+    !setupWindow.classList.contains('hidden') &&
+    !(setupWizardForm.querySelector('.setup-user-name') === document.activeElement)
+  ) {
+    evt.preventDefault();
+    closeSetup();
+  }
+}
+
+function onSetupEnterPress(evt) {
+  if (setupOpenIcon === document.activeElement) {
+    evt.preventDefault();
+    openSetup();
+  }
+  if (setupCloseButton === document.activeElement) {
+    evt.preventDefault();
+    closeSetup();
+  }
+}
+
 function onKeyDown(evt) {
   switch (evt.keyCode) {
-    case 13:
-      if (setupOpenIcon === document.activeElement) {
-        evt.preventDefault();
-        openSetup();
-      }
-      if (setupCloseButton === document.activeElement) {
-        evt.preventDefault();
-        closeSetup();
-      }
+    case ENTER_KEY: onSetupEnterPress(evt);
       break;
-    case 27:
-      if (
-        !setupWizardForm.contains(document.activeElement) &&
-        !setupWindow.classList.contains('hidden')
-      ) {
-        evt.preventDefault();
-        closeSetup();
-      }
+    case ESC_KEY: onSetupEscPress(evt);
       break;
   }
 }
@@ -154,15 +161,10 @@ function onFireballClick(evt) {
 // Выводим случайных волшебников на страницу
 addWizards(generateRandomWizards());
 
-// Задаем недостающие атрибуты формы настройки персонажа
-setupOpenIcon.setAttribute('tabindex', '0');
-setupWizardForm.setAttribute('method', 'POST');
-setupWizardForm.setAttribute('action', 'https://js.dump.academy/code-and-magick');
-setupSubmitButton.setAttribute('type', 'submit');
-
 // Добавляем обработчики событий
 setupOpenButton.addEventListener('click', onSetupWindowOpen);
-window.addEventListener('keydown', onKeyDown);
+setupOpenIcon.addEventListener('keydown', onKeyDown);
+setupWindow.addEventListener('keydown', onKeyDown);
 wizardSetup.eyes.addEventListener('click', onEyesClick);
 wizardSetup.coat.addEventListener('click', onCoatClick);
 wizardSetup.fireball.addEventListener('click', onFireballClick);

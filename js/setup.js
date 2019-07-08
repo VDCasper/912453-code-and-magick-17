@@ -88,8 +88,11 @@ function addWizards(wizardsArray) {
 function openSetup() {
   setupWindow.classList.remove('hidden');
   setupSimilar.classList.remove('hidden');
-  setupCloseButton.addEventListener('click', onSetupWindowClose);
-  setupOpenButton.removeEventListener('click', onSetupWindowOpen);
+  setupOpenButton.removeEventListener('click', onSetupOpenButtonClick);
+  setupOpenIcon.removeEventListener('keydown', onSetupOpenIconEnterPress);
+  setupCloseButton.addEventListener('click', onSetupCloseButtonClick);
+  setupCloseButton.addEventListener('keydown', onExitSetupButtonEnterPress);
+  window.addEventListener('keydown', onSetupEscPress);
   setupOpenIcon.setAttribute('tabindex', '-1');
   setupCloseButton.setAttribute('tabindex', '0');
 }
@@ -98,51 +101,45 @@ function openSetup() {
 function closeSetup() {
   setupWindow.classList.add('hidden');
   setupSimilar.classList.add('hidden');
-  setupCloseButton.removeEventListener('click', onSetupWindowClose);
-  setupOpenButton.addEventListener('click', onSetupWindowOpen);
+  setupCloseButton.removeEventListener('click', onSetupCloseButtonClick);
+  window.removeEventListener('keydown', onSetupEscPress);
+  setupOpenButton.addEventListener('click', onSetupOpenButtonClick);
+  setupOpenIcon.addEventListener('keydown', onSetupOpenIconEnterPress);
   setupOpenIcon.setAttribute('tabindex', '0');
   setupCloseButton.setAttribute('tabindex', '-1');
 }
 
 // Обработчики событий
 
-function onSetupWindowOpen(evt) {
+function onSetupOpenButtonClick(evt) {
   evt.preventDefault();
   openSetup();
 }
 
-function onSetupWindowClose(evt) {
+function onSetupCloseButtonClick(evt) {
   evt.preventDefault();
   closeSetup();
 }
 
 function onSetupEscPress(evt) {
-  if (
-    !setupWindow.classList.contains('hidden') &&
-    !(setupWizardForm.querySelector('.setup-user-name') === document.activeElement)
-  ) {
+  if (evt.keyCode === ESC_KEY &&
+    !(setupWizardForm.querySelector('.setup-user-name') === document.activeElement)) {
     evt.preventDefault();
     closeSetup();
   }
 }
 
-function onSetupEnterPress(evt) {
-  if (setupOpenIcon === document.activeElement) {
+function onExitSetupButtonEnterPress(evt) {
+  if (evt.keyCode === ENTER_KEY) {
+    evt.preventDefault();
+    closeSetup();
+  }
+}
+
+function onSetupOpenIconEnterPress(evt) {
+  if (evt.keyCode === ENTER_KEY) {
     evt.preventDefault();
     openSetup();
-  }
-  if (setupCloseButton === document.activeElement) {
-    evt.preventDefault();
-    closeSetup();
-  }
-}
-
-function onKeyDown(evt) {
-  switch (evt.keyCode) {
-    case ENTER_KEY: onSetupEnterPress(evt);
-      break;
-    case ESC_KEY: onSetupEscPress(evt);
-      break;
   }
 }
 
@@ -162,9 +159,8 @@ function onFireballClick(evt) {
 addWizards(generateRandomWizards());
 
 // Добавляем обработчики событий
-setupOpenButton.addEventListener('click', onSetupWindowOpen);
-setupOpenIcon.addEventListener('keydown', onKeyDown);
-setupWindow.addEventListener('keydown', onKeyDown);
+setupOpenButton.addEventListener('click', onSetupOpenButtonClick);
+setupOpenIcon.addEventListener('keydown', onSetupOpenIconEnterPress);
 wizardSetup.eyes.addEventListener('click', onEyesClick);
 wizardSetup.coat.addEventListener('click', onCoatClick);
 wizardSetup.fireball.addEventListener('click', onFireballClick);

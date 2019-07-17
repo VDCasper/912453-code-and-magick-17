@@ -107,6 +107,8 @@ function closeSetup() {
   setupOpenIcon.addEventListener('keydown', onSetupOpenIconEnterPress);
   setupOpenIcon.setAttribute('tabindex', '0');
   setupCloseButton.setAttribute('tabindex', '-1');
+  setupWindow.style.left = '';
+  setupWindow.style.top = '';
 }
 
 // Обработчики событий
